@@ -3,42 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Данные игрока</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-        #playerData { margin-top: 20px; padding: 10px; background: #fff; border: 1px solid #ddd; border-radius: 5px; }
-        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-    </style>
+    <title>Получение данных игрока</title>
+    <script>
+        async function getData() {
+            const webhookUrl = "https://errorianets.github.io/webhookSender";
+
+            try {
+                const response = await fetch(webhookUrl);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                displayData(data);
+            } catch (error) {
+                console.error('Ошибка при получении данных:', error);
+                alert('Ошибка при получении данных.');
+            }
+        }
+
+        function displayData(data) {
+            const output = document.getElementById('output');
+            output.innerHTML = `
+                <h2>Полученные данные:</h2>
+                <p><strong>Имя пользователя:</strong> ${data.username}</p>
+                <p><strong>Token ID:</strong> ${data.token_id}</p>
+                <p><strong>Текущий сектор:</strong> ${data.currentSector}</p>
+                <p><strong>Player UID:</strong> ${data.playerUid}</p>
+                <p><strong>Золото игрока:</strong> ${data.playerGold}</p>
+            `;
+        }
+    </script>
 </head>
 <body>
-    <h1>Данные игрока</h1>
-    <button id="fetchData">Получить данные</button>
-    <div id="playerData"></div>
-
-    <script>
-        document.getElementById('fetchData').addEventListener('click', () => {
-            fetch('URL_ВАШЕГО_API') // Замените на ваш API
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Ошибка сети');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const playerDataDiv = document.getElementById('playerData');
-                    playerDataDiv.innerHTML = `
-                        <h2>Имя: ${data.username}</h2>
-                        <p>Token ID: ${data.token_id}</p>
-                        <p>Player UID: ${data.playerUid}</p>
-                        <p>Сектор: ${data.currentSector}</p>
-                        <p>Золото: ${data.playerGold}</p>
-                    `;
-                })
-                .catch(error => {
-                    console.error('Ошибка:', error);
-                });
-        });
-    </script>
+    <h1>Получение данных игрока</h1>
+    <button onclick="getData()">Получить данные</button>
+    <div id="output"></div>
 </body>
 </html>
